@@ -1,0 +1,44 @@
+next
+  os
+    switch
+    boot
+    dry
+    config
+  home
+    switch
+    config
+  conf
+    config
+  search
+  install
+  remove
+  temp
+  list
+  clean
+  rollback
+  gens
+  sync
+  check
+  completions
+  run
+    mc
+      server
+
+
+commmands::
+os::switch()
+os::boot()
+os::dry()
+os::config()
+home::switch()
+home::config()
+conf::edit()
+apps::search()
+apps::install()
+apps::remove()
+apps::temp()
+apps::list()
+gens::clean()
+check::check()
+run::mc()
+run::mc_server()
