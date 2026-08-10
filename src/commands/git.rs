@@ -1,3 +1,4 @@
+use crate::messages::*;
 use crate::config::REPO_PATH;
 use crate::shell::run;
 use std::io::{self, Write, BufRead};
@@ -5,14 +6,14 @@ use std::io::{self, Write, BufRead};
 pub fn sync() {
     run(&format!("git -C {REPO_PATH} add -A"));
 
-    print!("commit message: ");
+    print!("{PREFIX} {PROMPT_COMMIT_MSG}: ");
     io::stdout().flush().ok();
     let mut input = String::new();
     io::stdin().lock().read_line(&mut input).ok();
     let msg = input.trim().to_string();
 
     if msg.is_empty() {
-        eprintln!("empty commit message, aborting");
+        eprintln!("{PREFIX} {ERR_EMPTY_COMMIT_MSG}");
         return;
     }
 

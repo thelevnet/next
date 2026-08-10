@@ -10,5 +10,5 @@ pub fn rollback() -> bool {
 }
 
 pub fn list() -> bool {
-    run("nixos-rebuild list-generations")
+    run(GENS_LIST)
 }

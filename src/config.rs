@@ -13,4 +13,5 @@ pub const OS_CONFIG: &str = "nvim /etc/nixos/configuration.nix";
 pub const HOME_SWITCH: &str = "nh home switch /etc/nixos -c lev";
 pub const HOME_CONFIG: &str = "nvim /etc/nixos/configuration.nix";
 
+pub const GENS_LIST: &str = "nixos-rebuild list-generations";
 

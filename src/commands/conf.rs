@@ -1,3 +1,4 @@
+use crate::messages::*;
 use crate::config::{DOTS_PATH, EDITOR};
 use crate::shell::{run, confirm};
 use crate::commands::home;
@@ -14,19 +15,19 @@ pub fn edit(module: Option<&str>) {
     };
 
     if !Path::new(&path).exists() {
-        eprintln!("module \"{}\" not found in {DOTS_PATH}", module.unwrap());
+        eprintln!("{PREFIX} {ERR_MODULE_NOT_FOUND} {DOTS_PATH}: \"{}\"", module.unwrap());
         return;
     }
 
     run(&format!("{EDITOR} {path}"));
 
-    if confirm("home switch now?") {
+    if confirm(&format!("{PREFIX} {PROMPT_HOME_SWITCH}")) {
         home::switch();
     }
 }
 
 fn list_modules() {
-    println!("available dots:");
+    println!("{PREFIX} {MSG_AVAILABLE_DOTS}:");
     if let Ok(entries) = fs::read_dir(DOTS_PATH) {
         for entry in entries.flatten() {
             if entry.path().is_dir() {

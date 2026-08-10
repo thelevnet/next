@@ -1,4 +1,5 @@
 mod cli;
+mod messages;
 mod config;
 mod nix_parser;
 mod shell;
