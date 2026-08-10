@@ -1,5 +1,6 @@
 use crate::messages::*;
 use crate::config::APPS_PATH;
+use crate::commands::git;
 use crate::nix_parser;
 use crate::commands::os;
 use crate::commands::search;
@@ -15,17 +16,21 @@ fn pick_and_describe() -> Option<String> {
 
 pub fn install(pkg: &str) -> bool {
     if let Err(e) = nix_parser::insert_entry(APPS_PATH, pkg) {
-        eprintln!("{PREFIX} {ERR_UPDATE_APPS_FILE}: {e}");
+        eprintln!("{ERR_UPDATE_APPS_FILE}: {e}");
         return false;
     }
-    os::switch()
+    os::switch();
+    git::commit_push(format!("{APP_INSTALLED} {pkg}"));
+    true
 }
 
 pub fn install_interactive() -> bool {
     match pick_and_describe() {
         Some(pkg) => {
-            if confirm(&format!("{PREFIX} {PROMPT_INSTALL} {pkg}?")) {
-                install(&pkg)
+            if confirm(&format!("{PROMPT_INSTALL} {pkg}?")) {
+                install(&pkg);
+                git::commit_push(format!("{APP_INSTALLED} {pkg}"));
+                true
             } else {
                 true
             }
@@ -36,7 +41,11 @@ pub fn install_interactive() -> bool {
 
 pub fn remove(pkg: &str) -> bool {
     match nix_parser::remove_entry(APPS_PATH, pkg) {
-        Ok(true) => os::switch(),
+        Ok(true) => {
+            os::switch();
+            git::commit_push(format!("{APP_REMOVED} {pkg}"));
+            true
+        },
         Ok(false) => { eprintln!("{PREFIX} {ERR_APP_NOT_FOUND}"); false }
         Err(e) => { eprintln!("{PREFIX} {ERR_REMOVE_APP}: {e}"); false }
     }
@@ -51,7 +60,9 @@ pub fn remove_interactive() -> bool {
     match search::search_over(&installed) {
         Some(pkg) => {
             if confirm(&format!("{PREFIX} {PROMPT_REMOVE} {pkg}?")) {
-                remove(&pkg)
+                remove(&pkg);
+                git::commit_push(format!("{PREFIX} {APP_REMOVED} {pkg}"));
+                true
             } else {
                 true
             }

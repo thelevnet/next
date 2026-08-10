@@ -24,7 +24,9 @@ pub fn edit(module: Option<&str>) {
     if confirm(&format!("{PREFIX} {PROMPT_HOME_SWITCH}")) {
         home::switch();
     }
+
 }
+
 
 fn list_modules() {
     println!("{PREFIX} {MSG_AVAILABLE_DOTS}:");

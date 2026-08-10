@@ -20,3 +20,11 @@ pub fn sync() {
     run(&format!("git -C {REPO_PATH} commit -m \"{msg}\""));
     run(&format!("git -C {REPO_PATH} push"));
 }
+
+pub fn commit_push(msg: String) {
+    println!("{PREFIX} {COMMIT_PUSH_MSG} \"\n{msg}\"\n");
+    run(&format!("git -C {REPO_PATH} add -A"));
+    run(&format!("git -C {REPO_PATH} commit -m \"{msg}\""));
+    run(&format!("git -C {REPO_PATH} push"));
+
+}

@@ -13,6 +13,8 @@ pub const PROMPT_REMOVE: &str = "Remove";
 
 // ── apps status ─────────────────────────────────────
 pub const MSG_NO_SELECTION: &str = "No app selected";
+pub const APP_INSTALLED: &str = "Installed:";
+pub const APP_REMOVED: &str = "Removed:";
 
 // ============ messages.rs — раздел check ============
 
@@ -20,6 +22,8 @@ pub const MSG_NO_SELECTION: &str = "No app selected";
 pub const MSG_CHECKING_FLAKE: &str = "Checking flake syntax";
 pub const MSG_CHECKING_GIT: &str = "Checking git status";
 pub const MSG_ALL_CLEAR: &str = "All clear";
+pub const OS_COMMIT_MSG: &str = "Update to /etc/nixos/configuration.nix";
+pub const HOME_COMMIT_MSG: &str = "Update to /etc/nixos/home.nix";
 
 // ── check errors ────────────────────────────────────
 pub const ERR_FLAKE_CHECK_FAILED: &str = "Flake check failed";
@@ -40,6 +44,7 @@ pub const PROMPT_HOME_SWITCH: &str = "Home switch now?";
 
 // ── git prompts ─────────────────────────────────────
 pub const PROMPT_COMMIT_MSG: &str = "Commit message";
+pub const COMMIT_PUSH_MSG: &str = "commit & push with message:";
 
 // ── git errors ──────────────────────────────────────
 pub const ERR_EMPTY_COMMIT_MSG: &str = "Empty commit message, aborting";
@@ -52,3 +57,8 @@ pub const FZF_SEARCH_HEADER: &str = "type to search nixpkgs live";
 pub const FZF_SELECT_PROMPT: &str = "select> ";
 pub const FZF_SELECT_HEADER: &str = "pick a package";
 pub const NO_DESCRIPTION: &str = "no description";
+
+// ============ messages.rs — раздел nix_parser ============
+
+// ── nix_parser errors ───────────────────────────────
+pub const ERR_MARKER_NOT_FOUND: &str = "Marker not found in";

@@ -1,9 +1,11 @@
+use crate::messages::*;
 use std::fs::{self, File};
 use std::io::{self, BufRead, BufReader};
 
 const START_MARKER: &str = "#next start";
 const END_MARKER: &str = "#next end";
 const DEPENDENCIES_MARKER: &str = "#next dependencies";
+
 pub fn insert_entry(path: &str, entry: &str) -> io::Result<()> {
     backup(path)?;
     let reader = BufReader::new(File::open(path)?);
@@ -21,7 +23,7 @@ pub fn insert_entry(path: &str, entry: &str) -> io::Result<()> {
     }
 
     if !found {
-        eprintln!("marker \"{START_MARKER}\" not found in {path}");
+        eprintln!("{PREFIX} {ERR_MARKER_NOT_FOUND} {path}: \"{START_MARKER}\"");
         return Ok(());
     }
 
@@ -38,7 +40,6 @@ pub fn remove_entry(path: &str, entry: &str) -> io::Result<bool> {
     for line in reader.lines() {
         let line = line?;
         let trimmed = line.trim();
-
         match trimmed {
             _ if trimmed == START_MARKER => { in_section = true; lines.push(line); continue; }
             _ if trimmed == END_MARKER => { in_section = false; lines.push(line); continue; }
