@@ -5,27 +5,31 @@ use crate::commands::home;
 use std::path::Path;
 use std::fs;
 
-pub fn edit(module: Option<&str>) {
+pub fn edit(module: Option<&str>) -> Option<String> {
     let path = match module {
         Some(m) => format!("{DOTS_PATH}/{m}"),
         None => {
             list_modules();
-            return;
+            return None;
         }
     };
 
     if !Path::new(&path).exists() {
         eprintln!("{PREFIX} {ERR_MODULE_NOT_FOUND} {DOTS_PATH}: \"{}\"", module.unwrap());
-        return;
+        return None;
     }
 
     run(&format!("{EDITOR} {path}"));
 
     if confirm(&format!("{PREFIX} {PROMPT_HOME_SWITCH}")) {
         home::switch();
+        Some(format!("Update dots: {}", module.unwrap_or("module")))
+    } else {
+        None
     }
-
 }
+
+// ... остальной код (list_modules) без изменений
 
 
 fn list_modules() {

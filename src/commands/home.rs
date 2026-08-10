@@ -1,18 +1,14 @@
 use crate::messages::*;
 use crate::config::*;
 use crate::shell::{run, confirm};
-use crate::commands::git;
 
-pub fn switch() -> bool {
-    run(HOME_SWITCH);
-    git::commit_push(format!("{HOME_COMMIT_MSG}"));
-    true
-}
+pub fn switch() -> bool { run(HOME_SWITCH) }
 
-pub fn conf() -> bool {
+pub fn conf() -> Option<String> {
     run(HOME_CONFIG);
     if confirm("Commit and push?") {
-        git::commit_push(format!("{HOME_COMMIT_MSG}"));
-    };
-    true
+        Some(HOME_COMMIT_MSG.to_string())
+    } else {
+        None
+    }
 }

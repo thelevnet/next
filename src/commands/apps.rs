@@ -1,6 +1,5 @@
 use crate::messages::*;
 use crate::config::APPS_PATH;
-use crate::commands::git;
 use crate::nix_parser;
 use crate::commands::os;
 use crate::commands::search;
@@ -14,60 +13,55 @@ fn pick_and_describe() -> Option<String> {
     Some(pkg)
 }
 
-pub fn install(pkg: &str) -> bool {
+// Убираем импорт git отсюда, он больше не нужен
+pub fn install(pkg: &str) -> Option<String> {
     if let Err(e) = nix_parser::insert_entry(APPS_PATH, pkg) {
         eprintln!("{ERR_UPDATE_APPS_FILE}: {e}");
-        return false;
+        return None;
     }
     os::switch();
-    git::commit_push(format!("{APP_INSTALLED} {pkg}"));
-    true
+    Some(format!("{APP_INSTALLED} {pkg}"))
 }
 
-pub fn install_interactive() -> bool {
+pub fn install_interactive() -> Option<String> {
     match pick_and_describe() {
         Some(pkg) => {
             if confirm(&format!("{PROMPT_INSTALL} {pkg}?")) {
-                install(&pkg);
-                git::commit_push(format!("{APP_INSTALLED} {pkg}"));
-                true
+                install(&pkg)
             } else {
-                true
+                None
             }
         }
-        None => { println!("{PREFIX} {MSG_NO_SELECTION}"); true }
+        None => { println!("{PREFIX} {MSG_NO_SELECTION}"); None }
     }
 }
 
-pub fn remove(pkg: &str) -> bool {
+pub fn remove(pkg: &str) -> Option<String> {
     match nix_parser::remove_entry(APPS_PATH, pkg) {
         Ok(true) => {
             os::switch();
-            git::commit_push(format!("{APP_REMOVED} {pkg}"));
-            true
+            Some(format!("{APP_REMOVED} {pkg}"))
         },
-        Ok(false) => { eprintln!("{PREFIX} {ERR_APP_NOT_FOUND}"); false }
-        Err(e) => { eprintln!("{PREFIX} {ERR_REMOVE_APP}: {e}"); false }
+        Ok(false) => { eprintln!("{PREFIX} {ERR_APP_NOT_FOUND}"); None }
+        Err(e) => { eprintln!("{PREFIX} {ERR_REMOVE_APP}: {e}"); None }
     }
 }
 
-pub fn remove_interactive() -> bool {
+pub fn remove_interactive() -> Option<String> {
     let installed = match nix_parser::list_entries(APPS_PATH) {
         Ok(list) if !list.is_empty() => list,
-        _ => { eprintln!("{PREFIX} {ERR_NO_INSTALLED_PACKAGES}"); return false; }
+        _ => { eprintln!("{PREFIX} {ERR_NO_INSTALLED_PACKAGES}"); return None; }
     };
 
     match search::search_over(&installed) {
         Some(pkg) => {
             if confirm(&format!("{PREFIX} {PROMPT_REMOVE} {pkg}?")) {
-                remove(&pkg);
-                git::commit_push(format!("{PREFIX} {APP_REMOVED} {pkg}"));
-                true
+                remove(&pkg)
             } else {
-                true
+                None
             }
         }
-        None => { println!("{PREFIX} {MSG_NO_SELECTION}"); true }
+        None => { println!("{PREFIX} {MSG_NO_SELECTION}"); None }
     }
 }
 
