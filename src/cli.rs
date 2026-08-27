@@ -24,12 +24,12 @@ pub enum Commands {
         /// leave empty to browse
         module: Option<String>,
     },
-    /// add a package to apps.nix
+    /// add a package to configuration.nix
     Install {
         /// leave empty to fuzzy search
         package: Option<String>,
     },
-    /// drop a package from apps.nix
+    /// drop a package from configuration.nix
     Remove {
         /// leave empty to pick from what's installed
         package: Option<String>,
@@ -39,7 +39,7 @@ pub enum Commands {
         /// leave empty to fuzzy search
         package: Option<String>,
     },
-    /// what's actually in apps.nix
+    /// what's actually in configuration.nix
     List,
     /// nuke old generations
     Clean,
