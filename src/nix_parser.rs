@@ -70,7 +70,11 @@ pub fn list_entries(path: &str) -> io::Result<Vec<String>> {
 }
 
 fn backup(path: &str) -> io::Result<()> {
-    let backup_path = format!("{path}.bak");
+    let file_name = std::path::Path::new(path)
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or("config.nix");
+    let backup_path = format!("/tmp/{file_name}.bak");
     fs::copy(path, backup_path)?;
     Ok(())
 }
