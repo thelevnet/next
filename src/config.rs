@@ -5,12 +5,7 @@ pub const CLEAN_CMD: &str = "sudo nix-env --delete-generations +2 --profile /nix
 pub const EDITOR: &str = "nvim";
 pub const REPO_PATH: &str = "/etc/nixos";
 
-pub const OS_SWITCH: &str = "nh os switch /etc/nixos --hostname desktop";
-pub const OS_BOOT: &str = "nh os boot /etc/nixos --hostname desktop";
-pub const OS_DRY: &str = "nh os build /etc/nixos --hostname desktop";
 pub const OS_CONFIG: &str = "nvim /etc/nixos/hosts/desktop/default.nix";
-
-pub const HOME_SWITCH: &str = "nh home switch /etc/nixos -c lev";
 pub const HOME_CONFIG: &str = "nvim /etc/nixos/users/lev/default.nix";
 
 pub const GENS_LIST: &str = "nixos-rebuild list-generations";

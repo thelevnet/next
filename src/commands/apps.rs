@@ -19,7 +19,7 @@ pub fn install(pkg: &str) -> Option<String> {
         eprintln!("{ERR_UPDATE_APPS_FILE}: {e}");
         return None;
     }
-    os::switch();
+    os::switch(None);
     Some(format!("{APP_INSTALLED} {pkg}"))
 }
 
@@ -39,7 +39,7 @@ pub fn install_interactive() -> Option<String> {
 pub fn remove(pkg: &str) -> Option<String> {
     match nix_parser::remove_entry(APPS_PATH, pkg) {
         Ok(true) => {
-            os::switch();
+            os::switch(None);
             Some(format!("{APP_REMOVED} {pkg}"))
         },
         Ok(false) => { eprintln!("{PREFIX} {ERR_APP_NOT_FOUND}"); None }

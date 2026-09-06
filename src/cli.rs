@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(name = "next", version = "1.1.2", about = "I dunno")]
+#[command(name = "next", version = "1.1.3", about = "I dunno")]
 pub struct Cli {
     #[command(subcommand)]
     pub command: Commands,
@@ -60,11 +60,23 @@ pub enum Commands {
 #[derive(Subcommand)]
 pub enum OsAction {
     /// activate the new config
-    Switch,
+    Switch {
+        /// hostname target (defaults to desktop)
+        #[arg(short = 'H', long)]
+        hostname: Option<String>,
+    },
     /// set it for next boot, don't touch the running system
-    Boot,
+    Boot {
+        /// hostname target (defaults to desktop)
+        #[arg(short = 'H', long)]
+        hostname: Option<String>,
+    },
     /// see what would change without applying anything
-    Dry,
+    Dry {
+        /// hostname target (defaults to desktop)
+        #[arg(short = 'H', long)]
+        hostname: Option<String>,
+    },
     /// jump straight to hosts/desktop
     Conf,
 }
@@ -72,7 +84,11 @@ pub enum OsAction {
 #[derive(Subcommand)]
 pub enum HomeAction {
     /// activate the new home config
-    Switch,
+    Switch {
+        /// configuration target (defaults to lev)
+        #[arg(short = 'c', long)]
+        configuration: Option<String>,
+    },
     /// jump straight to users/lev
     Conf,
 }

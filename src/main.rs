@@ -29,13 +29,13 @@ fn main() -> ExitCode {
 
     match cli.command {
         Commands::Os { action } => match action {
-            OsAction::Switch => { ok = commands::os::switch(); if ok { commit_msg = Some(OS_COMMIT_MSG.to_string()); } },
-            OsAction::Boot => { ok = commands::os::boot(); if ok { commit_msg = Some(OS_COMMIT_MSG.to_string()); } },
-            OsAction::Dry => { ok = commands::os::dry(); },
+            OsAction::Switch { hostname } => { ok = commands::os::switch(hostname.as_deref()); if ok { commit_msg = Some(OS_COMMIT_MSG.to_string()); } },
+            OsAction::Boot { hostname } => { ok = commands::os::boot(hostname.as_deref()); if ok { commit_msg = Some(OS_COMMIT_MSG.to_string()); } },
+            OsAction::Dry { hostname } => { ok = commands::os::dry(hostname.as_deref()); },
             OsAction::Conf => { commit_msg = commands::os::conf(); },
         },
         Commands::Home { action } => match action {
-            HomeAction::Switch => { ok = commands::home::switch(); if ok { commit_msg = Some(HOME_COMMIT_MSG.to_string()); } },
+            HomeAction::Switch { configuration } => { ok = commands::home::switch(configuration.as_deref()); if ok { commit_msg = Some(HOME_COMMIT_MSG.to_string()); } },
             HomeAction::Conf => { commit_msg = commands::home::conf(); },
         },
         Commands::Conf { module } => {

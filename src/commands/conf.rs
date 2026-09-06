@@ -52,7 +52,7 @@ pub fn edit(module: Option<&str>) -> Option<String> {
     run(&format!("{EDITOR} {path}"));
 
     if confirm(&format!("{PREFIX} {PROMPT_HOME_SWITCH}")) {
-        home::switch();
+        home::switch(None);
         Some(format!("Update dots: {}", module.unwrap_or("module")))
     } else {
         None
