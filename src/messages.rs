@@ -22,8 +22,8 @@ pub const APP_REMOVED: &str = "Removed:";
 pub const MSG_CHECKING_FLAKE: &str = "Checking flake syntax";
 pub const MSG_CHECKING_GIT: &str = "Checking git status";
 pub const MSG_ALL_CLEAR: &str = "All clear";
-pub const OS_COMMIT_MSG: &str = "Update to /etc/nixos/configuration.nix";
-pub const HOME_COMMIT_MSG: &str = "Update to /etc/nixos/home.nix";
+pub const OS_COMMIT_MSG: &str = "Update to /etc/nixos/hosts/desktop";
+pub const HOME_COMMIT_MSG: &str = "Update to /etc/nixos/users/lev";
 
 // ── check errors ────────────────────────────────────
 pub const ERR_FLAKE_CHECK_FAILED: &str = "Flake check failed";

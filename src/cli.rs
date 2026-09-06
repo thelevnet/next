@@ -24,12 +24,12 @@ pub enum Commands {
         /// leave empty to browse
         module: Option<String>,
     },
-    /// add a package to configuration.nix
+    /// add a package to packages.nix
     Install {
         /// leave empty to fuzzy search
         package: Option<String>,
     },
-    /// drop a package from configuration.nix
+    /// drop a package from packages.nix
     Remove {
         /// leave empty to pick from what's installed
         package: Option<String>,
@@ -39,7 +39,7 @@ pub enum Commands {
         /// leave empty to fuzzy search
         package: Option<String>,
     },
-    /// what's actually in configuration.nix
+    /// what's actually in packages.nix
     List,
     /// nuke old generations
     Clean,
@@ -65,7 +65,7 @@ pub enum OsAction {
     Boot,
     /// see what would change without applying anything
     Dry,
-    /// jump straight to configuration.nix
+    /// jump straight to hosts/desktop
     Conf,
 }
 
@@ -73,6 +73,6 @@ pub enum OsAction {
 pub enum HomeAction {
     /// activate the new home config
     Switch,
-    /// jump straight to home.nix
+    /// jump straight to users/lev
     Conf,
 }
