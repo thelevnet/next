@@ -21,6 +21,7 @@ fn main() -> ExitCode {
     match cli.command {
         Commands::Os { action } => match action {
             OsAction::Switch => { commands::os::switch(); },
+            OsAction::Boot => { commands::os::boot(); },
             OsAction::Dry => { commands::os::dry(); },
             OsAction::Clean => { commands::os::clean(); },
             OsAction::Rollback => { commands::os::rollback(); },

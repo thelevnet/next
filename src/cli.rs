@@ -40,6 +40,7 @@ pub enum Commands {
 #[derive(Subcommand)]
 pub enum OsAction {
     Switch,
+    Boot,
     Dry,
     Clean,
     Rollback,
