@@ -14,21 +14,36 @@
       packages = forAllSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          runtimeDeps = with pkgs; [
+            nh
+            fzf
+            jq
+            git
+            nix
+          ] ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+            pkgs.nixos-rebuild
+          ];
         in
         {
           default = pkgs.rustPlatform.buildRustPackage {
             pname = "next";
-            version = "1.1.3";
+            version = "1.1.4";
             src = ./.;
 
             cargoLock.lockFile = ./Cargo.lock;
 
-            nativeBuildInputs = [ pkgs.installShellFiles ];
+            nativeBuildInputs = [
+              pkgs.installShellFiles
+              pkgs.makeWrapper
+            ];
 
             postInstall = ''
               installShellCompletion --cmd next \
                 --zsh <($out/bin/next completions zsh) \
                 --bash <($out/bin/next completions bash)
+
+              wrapProgram $out/bin/next \
+                --prefix PATH : ${pkgs.lib.makeBinPath runtimeDeps}
             '';
 
             meta = with pkgs.lib; {

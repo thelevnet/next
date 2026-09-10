@@ -1,32 +1,32 @@
-use crate::messages::*;
-use crate::config::*;
-use crate::shell::{run, confirm};
+use crate::config::{Config, CLEAN_CMD, GENS_LIST, REPO_PATH, ROLLBACK_CMD};
+use crate::shell::run;
 
-fn get_target(host: Option<&str>) -> &str {
-    host.unwrap_or("desktop")
-}
-
-pub fn switch(host: Option<&str>) -> bool {
-    let target = get_target(host);
+/// Build and switch to the NixOS system configuration
+pub fn switch() -> bool {
+    let config = Config::load();
+    let target = &config.general.hostname;
     run(&format!("nh os switch {REPO_PATH} --hostname {target}"))
 }
 
-pub fn boot(host: Option<&str>) -> bool {
-    let target = get_target(host);
-    run(&format!("nh os boot {REPO_PATH} --hostname {target}"))
-}
-
-pub fn dry(host: Option<&str>) -> bool {
-    let target = get_target(host);
+/// Dry-build the NixOS system configuration without switching
+pub fn dry() -> bool {
+    let config = Config::load();
+    let target = &config.general.hostname;
     run(&format!("nh os build {REPO_PATH} --hostname {target}"))
 }
 
-pub fn conf() -> Option<String> {
-    run(OS_CONFIG);
-    if confirm("Switch now?") {
-        switch(None);
-        Some(OS_COMMIT_MSG.to_string())
-    } else {
-        None
-    }
+/// Clean older generations and collect garbage
+pub fn clean() -> bool {
+    run(CLEAN_CMD)
 }
+
+/// Roll back to the previous NixOS generation
+pub fn rollback() -> bool {
+    run(ROLLBACK_CMD)
+}
+
+/// List all NixOS generations
+pub fn list() -> bool {
+    run(GENS_LIST)
+}
+

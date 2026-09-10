@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(name = "next", version = "1.1.3", about = "I dunno")]
+#[command(name = "next", version = "1.1.4", about = "NixOS helper for github:thelevnet/dots")]
 pub struct Cli {
     #[command(subcommand)]
     pub command: Commands,
@@ -9,49 +9,29 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Commands {
-    /// rebuild the system
+    /// system actions
     Os {
         #[command(subcommand)]
         action: OsAction,
     },
-    /// rebuild just the user config
+    /// home actions
     Home {
         #[command(subcommand)]
         action: HomeAction,
     },
-    /// open a dots module, offers to rebuild after
-    Conf {
-        /// leave empty to browse
-        module: Option<String>,
+    /// app actions
+    App {
+        #[command(subcommand)]
+        action: AppAction,
     },
-    /// add a package to packages.nix
-    Install {
-        /// leave empty to fuzzy search
-        package: Option<String>,
+    /// git actions
+    Git {
+        #[command(subcommand)]
+        action: GitAction,
     },
-    /// drop a package from packages.nix
-    Remove {
-        /// leave empty to pick from what's installed
-        package: Option<String>,
-    },
-    /// try a package without committing to it
-    Temp {
-        /// leave empty to fuzzy search
-        package: Option<String>,
-    },
-    /// what's actually in packages.nix
-    List,
-    /// nuke old generations
-    Clean,
-    /// undo the last switch
-    Rollback,
-    /// every generation still hanging around
-    Gens,
-    /// commit whatever's dirty and push
-    Sync,
-    /// make sure the flake isn't about to blow up
-    Check,
-    /// spit out a completion script for your shell
+    /// development shell
+    Dev,
+    /// shell completions
     Completions {
         shell: clap_complete::Shell,
     },
@@ -59,36 +39,27 @@ pub enum Commands {
 
 #[derive(Subcommand)]
 pub enum OsAction {
-    /// activate the new config
-    Switch {
-        /// hostname target (defaults to desktop)
-        #[arg(short = 'H', long)]
-        hostname: Option<String>,
-    },
-    /// set it for next boot, don't touch the running system
-    Boot {
-        /// hostname target (defaults to desktop)
-        #[arg(short = 'H', long)]
-        hostname: Option<String>,
-    },
-    /// see what would change without applying anything
-    Dry {
-        /// hostname target (defaults to desktop)
-        #[arg(short = 'H', long)]
-        hostname: Option<String>,
-    },
-    /// jump straight to hosts/desktop
-    Conf,
+    Switch,
+    Dry,
+    Clean,
+    Rollback,
+    List,
 }
 
 #[derive(Subcommand)]
 pub enum HomeAction {
-    /// activate the new home config
-    Switch {
-        /// configuration target (defaults to lev)
-        #[arg(short = 'c', long)]
-        configuration: Option<String>,
-    },
-    /// jump straight to users/lev
-    Conf,
+    Switch,
+}
+
+#[derive(Subcommand)]
+pub enum AppAction {
+    Install { package: Option<String> },
+    Try { package: Option<String> },
+    Remove { package: Option<String> },
+    List,
+}
+
+#[derive(Subcommand)]
+pub enum GitAction {
+    Sync,
 }

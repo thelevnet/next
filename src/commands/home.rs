@@ -1,21 +1,24 @@
-use crate::messages::*;
-use crate::config::*;
-use crate::shell::{run, confirm};
+use crate::config::{Config, REPO_PATH};
+use crate::shell::{confirm, run};
 
-fn get_config(user: Option<&str>) -> &str {
-    user.unwrap_or("lev")
-}
-
-pub fn switch(user: Option<&str>) -> bool {
-    let target = get_config(user);
+/// Build and switch to Home Manager configuration for the configured user
+pub fn switch() -> bool {
+    let config = Config::load();
+    let target = &config.general.user;
     run(&format!("nh home switch {REPO_PATH} -c {target}"))
 }
 
+/// Edit user home configuration with editor and optionally prompt to commit
+#[allow(dead_code)]
 pub fn conf() -> Option<String> {
-    run(HOME_CONFIG);
+    let config = Config::load();
+    run(&config.home_config());
     if confirm("Commit and push?") {
-        Some(HOME_COMMIT_MSG.to_string())
+        Some(format!("Update to {REPO_PATH}/users/{}", config.general.user))
     } else {
         None
     }
 }
+
+
+

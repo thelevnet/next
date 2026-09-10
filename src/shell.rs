@@ -12,10 +12,19 @@ pub fn capture(command: &str) -> String {
 }
 
 pub fn confirm(prompt: &str) -> bool {
+    let config = crate::config::Config::load();
+    match config.general.confirm_action.to_lowercase().as_str() {
+        "always" | "auto" | "yes" | "true" => return true,
+        "never" | "no" | "false" => return false,
+        _ => {}
+    }
+
     use std::io::{self, Write, BufRead};
-    print!("{prompt} [y/N] ");
+    let clean_prompt = prompt.trim_end_matches('?');
+    print!("{clean_prompt}? [y/N] ");
     io::stdout().flush().ok();
     let mut input = String::new();
     io::stdin().lock().read_line(&mut input).ok();
     matches!(input.trim().to_lowercase().as_str(), "y" | "yes")
 }
+
