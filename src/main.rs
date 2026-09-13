@@ -13,6 +13,13 @@ use cli::{Cli, Commands, HomeAction, OsAction};
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
+    let mut raw_args = std::env::args().skip(1);
+    if raw_args.next().as_deref() == Some("--query") {
+        let words: Vec<String> = raw_args.collect();
+        commands::search::query(&words);
+        return ExitCode::SUCCESS;
+    }
+
     let cli = Cli::parse();
 
     let success = match cli.command {
@@ -27,10 +34,6 @@ fn main() -> ExitCode {
         Commands::Sync { message } => commands::sync::sync(message),
         Commands::Search { query } => commands::search::run(query),
         Commands::Dev => commands::dev::enter(),
-        Commands::SearchQuery { query } => {
-            commands::search::query(&query);
-            true
-        }
     };
 
     if success {

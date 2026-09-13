@@ -31,10 +31,6 @@ pub enum Commands {
     },
     /// development shell
     Dev,
-    #[command(hide = true, name = "__search-query")]
-    SearchQuery {
-        query: Vec<String>,
-    },
 }
 
 #[derive(Subcommand)]

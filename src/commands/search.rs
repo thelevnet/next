@@ -16,7 +16,7 @@ struct PackageResult {
 
 pub fn run(initial_query: Option<String>) -> bool {
     let self_exe = std::env::current_exe().unwrap_or_else(|_| "next".into());
-    let reload_cmd = format!("{} __search-query {{q}}", self_exe.display());
+    let reload_cmd = format!("{} --query {{q}}", self_exe.display());
 
     let mut cmd = Command::new("fzf");
     cmd.args([
