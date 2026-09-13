@@ -26,10 +26,6 @@ pub enum Commands {
     },
     /// development shell
     Dev,
-    /// shell completions
-    Completions {
-        shell: clap_complete::Shell,
-    },
 }
 
 #[derive(Subcommand)]

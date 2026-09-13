@@ -37,8 +37,9 @@
 
             postInstall = ''
               installShellCompletion --cmd next \
-                --zsh <($out/bin/next completions zsh) \
-                --bash <($out/bin/next completions bash)
+                --bash completions/next.bash \
+                --zsh completions/_next \
+                --fish completions/next.fish
 
               wrapProgram $out/bin/next \
                 --prefix PATH : ${pkgs.lib.makeBinPath runtimeDeps}

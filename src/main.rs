@@ -6,10 +6,8 @@ mod commands {
     pub mod git;
     pub mod dev;
 }
-use clap::{CommandFactory, Parser};
-use clap_complete::generate;
+use clap::Parser;
 use cli::{Cli, Commands, GitAction, HomeAction, OsAction};
-use std::io;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
@@ -28,11 +26,6 @@ fn main() -> ExitCode {
             GitAction::Sync => { commands::git::sync(); },
         },
         Commands::Dev => { commands::dev::enter(); },
-        Commands::Completions { shell } => {
-            let mut cmd = Cli::command();
-            let name = cmd.get_name().to_string();
-            generate(shell, &mut cmd, name, &mut io::stdout());
-        },
     };
 
     ExitCode::SUCCESS
