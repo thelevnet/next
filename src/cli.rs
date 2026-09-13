@@ -19,10 +19,11 @@ pub enum Commands {
         #[command(subcommand)]
         action: HomeAction,
     },
-    /// git actions
-    Git {
-        #[command(subcommand)]
-        action: GitAction,
+    /// sync configuration with git
+    #[command(alias = "git")]
+    Sync {
+        /// commit message
+        message: Option<String>,
     },
     /// development shell
     Dev,
@@ -40,7 +41,3 @@ pub enum HomeAction {
     Switch,
 }
 
-#[derive(Subcommand)]
-pub enum GitAction {
-    Sync,
-}
