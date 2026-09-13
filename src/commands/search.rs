@@ -21,14 +21,13 @@ pub fn apps(initial_query: Option<String>) -> bool {
     let mut cmd = Command::new("fzf");
     cmd.args([
         "--disabled",
+        "--ansi",
         "--layout=reverse",
-        "--height=50%",
-        "--border=rounded",
-        "--prompt=󰍪 nixpkgs> ",
-        "--pointer=▶",
-        "--marker=✓",
-        "--tabstop=32",
-        "--header=Type to search nixpkgs | Enter: copy & print | Esc: exit",
+        "--height=40%",
+        "--info=inline",
+        "--prompt=apps> ",
+        "--delimiter=\t",
+        "--with-nth=2",
         "--bind",
         &format!("start,change:reload:{reload_cmd}"),
     ]);
@@ -58,15 +57,18 @@ pub fn apps(initial_query: Option<String>) -> bool {
         return true;
     }
 
-    let (name, desc) = selected.split_once('\t').unwrap_or((selected, ""));
-    let name = name.trim();
-    let desc = desc.trim();
+    let parts: Vec<&str> = selected.split('\t').collect();
+    let name = parts.first().unwrap_or(&selected).trim();
+    let desc = parts.get(2).copied().unwrap_or("").trim();
 
     copy_to_clipboard(name);
 
-    println!("\x1b[32m✔\x1b[0m Copied '\x1b[1;36m{name}\x1b[0m' to clipboard!");
-    println!("\x1b[1mName:\x1b[0m        {name}");
-    println!("\x1b[1mDescription:\x1b[0m {desc}");
+    println!("Copied '{name}' to clipboard");
+    if !desc.is_empty() {
+        println!("{name}: {desc}");
+    } else {
+        println!("{name}");
+    }
 
     true
 }
@@ -86,12 +88,19 @@ pub fn query(words: &[String]) {
                 let mut stdout = std::io::stdout().lock();
                 for item in resp.results {
                     if let Some(name) = item.package_attr_name {
-                        let desc = item
+                        let raw_desc = item
                             .package_description
                             .as_deref()
-                            .unwrap_or("No description")
+                            .unwrap_or("")
                             .replace(['\n', '\r', '\t'], " ");
-                        if writeln!(stdout, "{name}\t{desc}").is_err() {
+                        let clean_desc = raw_desc.trim();
+                        let padded_name = if name.len() < 28 {
+                            format!("{name:<28} ")
+                        } else {
+                            format!("{name} ")
+                        };
+                        let display = format!("{padded_name}\x1b[90m{clean_desc}\x1b[0m");
+                        if writeln!(stdout, "{name}\t{display}\t{clean_desc}").is_err() {
                             break;
                         }
                     }
