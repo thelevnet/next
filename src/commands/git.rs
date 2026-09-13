@@ -1,30 +1,19 @@
-use crate::shell::REPO_PATH;
+use crate::shell::run;
 use std::io::{self, BufRead, Write};
-use std::process::Command;
 
-pub fn sync() {
-    let _ = Command::new("git").args(["-C", REPO_PATH, "add", "-A"]).status();
-
+pub fn sync() -> bool {
     print!("Commit message: ");
     io::stdout().flush().ok();
-    let mut input = String::new();
-    io::stdin().lock().read_line(&mut input).ok();
-    let msg = input.trim().to_string();
+    let mut msg = String::new();
+    io::stdin().lock().read_line(&mut msg).ok();
+    let msg = msg.trim();
 
     if msg.is_empty() {
         eprintln!("Empty commit message, aborting");
-        return;
+        return false;
     }
 
-    let status = Command::new("git")
-        .args(["-C", REPO_PATH, "commit", "-m", &msg])
-        .status();
-
-    if let Ok(s) = status {
-        if s.success() {
-            let _ = Command::new("git").args(["-C", REPO_PATH, "push"]).status();
-        }
-    }
+    run(&format!("git -C /etc/nixos add -A && git -C /etc/nixos commit -m {msg:?} && git -C /etc/nixos push"))
 }
 
 

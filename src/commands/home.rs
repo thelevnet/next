@@ -1,8 +1,7 @@
-use crate::shell::{run, username, REPO_PATH};
+use crate::shell::run;
 
 pub fn switch() -> bool {
-    let target = username();
-    run(&format!("nh home switch {REPO_PATH} -c {target}"))
+    run("nh home switch /etc/nixos")
 }
 
 

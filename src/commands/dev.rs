@@ -1,6 +1,6 @@
-use crate::shell::{run, REPO_PATH};
+use crate::shell::run;
 
 pub fn enter() -> bool {
-    run(&format!("cd {REPO_PATH} && exec nix develop -c \"${{SHELL:-bash}}\""))
+    run("cd /etc/nixos && exec nix develop -c \"${SHELL:-bash}\"")
 }
 
