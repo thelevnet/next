@@ -14,7 +14,7 @@ struct PackageResult {
     package_description: Option<String>,
 }
 
-pub fn apps(initial_query: Option<String>) -> bool {
+pub fn run(initial_query: Option<String>) -> bool {
     let self_exe = std::env::current_exe().unwrap_or_else(|_| "next".into());
     let reload_cmd = format!("{} __search-query {{q}}", self_exe.display());
 
@@ -25,7 +25,7 @@ pub fn apps(initial_query: Option<String>) -> bool {
         "--layout=reverse",
         "--height=40%",
         "--info=inline",
-        "--prompt=apps> ",
+        "--prompt=> ",
         "--delimiter=\t",
         "--with-nth=2",
         "--bind",
@@ -63,7 +63,6 @@ pub fn apps(initial_query: Option<String>) -> bool {
 
     copy_to_clipboard(name);
 
-    println!("Copied '{name}' to clipboard");
     if !desc.is_empty() {
         println!("{name}: {desc}");
     } else {
@@ -78,7 +77,7 @@ pub fn query(words: &[String]) {
     let query_arg = query_str.trim();
 
     let output = Command::new("nh")
-        .args(["search", "packages", query_arg, "-l", "40", "--json"])
+        .args(["search", "packages", query_arg, "-l", "200", "--json"])
         .stderr(Stdio::null())
         .output();
 

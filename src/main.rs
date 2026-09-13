@@ -9,7 +9,7 @@ mod commands {
 }
 
 use clap::Parser;
-use cli::{Cli, Commands, HomeAction, OsAction, SearchAction};
+use cli::{Cli, Commands, HomeAction, OsAction};
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
@@ -25,9 +25,7 @@ fn main() -> ExitCode {
             HomeAction::Switch => commands::home::switch(),
         },
         Commands::Sync { message } => commands::sync::sync(message),
-        Commands::Search { action } => match action {
-            SearchAction::Apps { query } => commands::search::apps(query),
-        },
+        Commands::Search { query } => commands::search::run(query),
         Commands::Dev => commands::dev::enter(),
         Commands::SearchQuery { query } => {
             commands::search::query(&query);

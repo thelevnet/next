@@ -26,8 +26,8 @@ pub enum Commands {
     },
     /// search nixpkgs
     Search {
-        #[command(subcommand)]
-        action: SearchAction,
+        /// search query
+        query: Option<String>,
     },
     /// development shell
     Dev,
@@ -49,12 +49,4 @@ pub enum HomeAction {
     Switch,
 }
 
-#[derive(Subcommand)]
-pub enum SearchAction {
-    /// search nixpkgs applications
-    Apps {
-        /// search query
-        query: Option<String>,
-    },
-}
 
