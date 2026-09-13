@@ -1,6 +1,6 @@
 use crate::config::{Config, REPO_PATH};
-use crate::shell::run;
 use std::io::{self, BufRead, Write};
+use std::process::Command;
 
 pub fn sync() {
     let config = Config::load();
@@ -8,7 +8,8 @@ pub fn sync() {
         eprintln!("Git integration is disabled in config");
         return;
     }
-    run(&format!("git -C {REPO_PATH} add -A"));
+
+    let _ = Command::new("git").args(["-C", REPO_PATH, "add", "-A"]).status();
 
     print!("Commit message: ");
     io::stdout().flush().ok();
@@ -21,21 +22,15 @@ pub fn sync() {
         return;
     }
 
-    run(&format!("git -C {REPO_PATH} commit -m \"{msg}\""));
-    run(&format!("git -C {REPO_PATH} push"));
-}
+    let status = Command::new("git")
+        .args(["-C", REPO_PATH, "commit", "-m", &msg])
+        .status();
 
-#[allow(dead_code)]
-pub fn commit_push(msg: String) {
-    let config = Config::load();
-    if !config.git.enable {
-        eprintln!("Git integration is disabled in config");
-        return;
+    if let Ok(s) = status {
+        if s.success() {
+            let _ = Command::new("git").args(["-C", REPO_PATH, "push"]).status();
+        }
     }
-    println!("Commit & push with message: \"{msg}\"");
-    run(&format!("git -C {REPO_PATH} add -A"));
-    run(&format!("git -C {REPO_PATH} commit -m \"{msg}\""));
-    run(&format!("git -C {REPO_PATH} push"));
 }
 
 

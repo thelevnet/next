@@ -2,10 +2,8 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
 
-pub const ROLLBACK_CMD: &str = "nh os rollback";
 pub const CLEAN_CMD: &str = "sudo nix-env --delete-generations +2 --profile /nix/var/nix/profiles/system && sudo nix-collect-garbage -d && sudo nix-store --optimise && sudo nix-collect-garbage --delete-old && sudo journalctl --vacuum-time=3d && sudo rm -rf /tmp/* && nix-env --delete-generations +2 && home-manager expire-generations '-1 days' && sudo nix-store --gc";
 pub const REPO_PATH: &str = "/etc/nixos";
-pub const GENS_LIST: &str = "nixos-rebuild list-generations";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Config {
@@ -13,8 +11,6 @@ pub struct Config {
     pub general: GeneralConfig,
     #[serde(default)]
     pub git: GitConfig,
-    #[serde(default)]
-    pub ui: UiConfig,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -23,10 +19,6 @@ pub struct GeneralConfig {
     pub user: String,
     #[serde(default = "default_hostname")]
     pub hostname: String,
-    #[serde(default = "default_confirm_action")]
-    pub confirm_action: String,
-    #[serde(default = "default_editor")]
-    pub editor: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -35,28 +27,12 @@ pub struct GitConfig {
     pub enable: bool,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct UiConfig {
-    #[serde(default = "default_true")]
-    pub enable_color: bool,
-    #[serde(default = "default_true")]
-    pub enable_nerd_fonts: bool,
-}
-
 fn default_user() -> String {
     std::env::var("USER").unwrap_or_else(|_| "lev".to_string())
 }
 
 fn default_hostname() -> String {
     "desktop".to_string()
-}
-
-fn default_confirm_action() -> String {
-    "prompt".to_string()
-}
-
-fn default_editor() -> String {
-    std::env::var("EDITOR").unwrap_or_else(|_| "nvim".to_string())
 }
 
 const fn default_true() -> bool {
@@ -68,7 +44,6 @@ impl Default for Config {
         Self {
             general: GeneralConfig::default(),
             git: GitConfig::default(),
-            ui: UiConfig::default(),
         }
     }
 }
@@ -78,8 +53,6 @@ impl Default for GeneralConfig {
         Self {
             user: default_user(),
             hostname: default_hostname(),
-            confirm_action: default_confirm_action(),
-            editor: default_editor(),
         }
     }
 }
@@ -88,15 +61,6 @@ impl Default for GitConfig {
     fn default() -> Self {
         Self {
             enable: default_true(),
-        }
-    }
-}
-
-impl Default for UiConfig {
-    fn default() -> Self {
-        Self {
-            enable_color: default_true(),
-            enable_nerd_fonts: default_true(),
         }
     }
 }
@@ -138,37 +102,6 @@ impl Config {
         }
         Self::default()
     }
-
-    /// Load or create default config file if it doesn't exist
-    #[allow(dead_code)]
-    pub fn load_or_create() -> Result<Self, Box<dyn std::error::Error>> {
-        let path = Self::default_path()
-            .ok_or_else(|| "Could not determine user config directory ($HOME not set)")?;
-
-        if !path.exists() {
-            if let Some(parent) = path.parent() {
-                fs::create_dir_all(parent)?;
-            }
-            let default_cfg = Self::default();
-            let toml_str = toml::to_string_pretty(&default_cfg)?;
-            fs::write(&path, toml_str)?;
-            return Ok(default_cfg);
-        }
-
-        Self::load_from_path(path)
-    }
-
-    /// Dynamic path to user home config based on configured user
-    #[allow(dead_code)]
-    pub fn home_config(&self) -> String {
-        format!("nvim /etc/nixos/users/{}/default.nix", self.general.user)
-    }
-
-    /// Dynamic path to os host config based on configured hostname
-    #[allow(dead_code)]
-    pub fn os_config(&self) -> String {
-        format!("nvim /etc/nixos/hosts/{}/default.nix", self.general.hostname)
-    }
 }
 
 #[cfg(test)]
@@ -184,20 +117,12 @@ hostname = "desktop"
 confirm_action = "prompt" 
 [git]
 enable = true
-[app]
-show_description = true
-[ui]
-enable_color = true
-enable_nerd_fonts = true
 "#;
 
         let config = Config::parse(toml_content).expect("Failed to parse config");
         assert_eq!(config.general.user, "lev");
         assert_eq!(config.general.hostname, "desktop");
-        assert_eq!(config.general.confirm_action, "prompt");
         assert!(config.git.enable);
-        assert!(config.ui.enable_color);
-        assert!(config.ui.enable_nerd_fonts);
     }
 }
 

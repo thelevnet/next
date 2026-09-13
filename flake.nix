@@ -25,7 +25,7 @@
         {
           default = pkgs.rustPlatform.buildRustPackage {
             pname = "next";
-            version = "1.1.5";
+            version = "1.1.6";
             src = ./.;
 
             cargoLock.lockFile = ./Cargo.lock;
