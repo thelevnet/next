@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(name = "next", version = "1.1.4", about = "NixOS helper for github:thelevnet/dots")]
+#[command(name = "next", version = "1.1.5", about = "NixOS helper for github:thelevnet/dots")]
 pub struct Cli {
     #[command(subcommand)]
     pub command: Commands,
@@ -18,11 +18,6 @@ pub enum Commands {
     Home {
         #[command(subcommand)]
         action: HomeAction,
-    },
-    /// app actions
-    App {
-        #[command(subcommand)]
-        action: AppAction,
     },
     /// git actions
     Git {
@@ -50,14 +45,6 @@ pub enum OsAction {
 #[derive(Subcommand)]
 pub enum HomeAction {
     Switch,
-}
-
-#[derive(Subcommand)]
-pub enum AppAction {
-    Install { package: Option<String> },
-    Try { package: Option<String> },
-    Remove { package: Option<String> },
-    List,
 }
 
 #[derive(Subcommand)]

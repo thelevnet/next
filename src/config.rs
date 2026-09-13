@@ -14,8 +14,6 @@ pub struct Config {
     #[serde(default)]
     pub git: GitConfig,
     #[serde(default)]
-    pub app: AppConfig,
-    #[serde(default)]
     pub ui: UiConfig,
 }
 
@@ -35,12 +33,6 @@ pub struct GeneralConfig {
 pub struct GitConfig {
     #[serde(default = "default_true")]
     pub enable: bool,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct AppConfig {
-    #[serde(default = "default_true")]
-    pub show_description: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -76,7 +68,6 @@ impl Default for Config {
         Self {
             general: GeneralConfig::default(),
             git: GitConfig::default(),
-            app: AppConfig::default(),
             ui: UiConfig::default(),
         }
     }
@@ -97,14 +88,6 @@ impl Default for GitConfig {
     fn default() -> Self {
         Self {
             enable: default_true(),
-        }
-    }
-}
-
-impl Default for AppConfig {
-    fn default() -> Self {
-        Self {
-            show_description: default_true(),
         }
     }
 }
@@ -175,11 +158,6 @@ impl Config {
         Self::load_from_path(path)
     }
 
-    /// Dynamic path to apps / packages.nix based on configured user
-    pub fn apps_path(&self) -> String {
-        format!("/etc/nixos/users/{}/packages.nix", self.general.user)
-    }
-
     /// Dynamic path to user home config based on configured user
     #[allow(dead_code)]
     pub fn home_config(&self) -> String {
@@ -218,7 +196,6 @@ enable_nerd_fonts = true
         assert_eq!(config.general.hostname, "desktop");
         assert_eq!(config.general.confirm_action, "prompt");
         assert!(config.git.enable);
-        assert!(config.app.show_description);
         assert!(config.ui.enable_color);
         assert!(config.ui.enable_nerd_fonts);
     }

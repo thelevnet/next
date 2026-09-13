@@ -5,6 +5,7 @@ pub fn run(command: &str) -> bool {
         .map(|s| s.success()).unwrap_or(false)
 }
 
+#[allow(dead_code)]
 pub fn capture(command: &str) -> String {
     Command::new("sh").arg("-c").arg(command).output()
         .map(|o| String::from_utf8_lossy(&o.stdout).to_string())

@@ -16,8 +16,6 @@
           pkgs = nixpkgs.legacyPackages.${system};
           runtimeDeps = with pkgs; [
             nh
-            fzf
-            jq
             git
             nix
           ] ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isLinux [
@@ -27,7 +25,7 @@
         {
           default = pkgs.rustPlatform.buildRustPackage {
             pname = "next";
-            version = "1.1.4";
+            version = "1.1.5";
             src = ./.;
 
             cargoLock.lockFile = ./Cargo.lock;
