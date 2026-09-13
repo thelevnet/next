@@ -1,9 +1,7 @@
-use crate::config::{Config, REPO_PATH};
-use crate::shell::run;
+use crate::shell::{run, username, REPO_PATH};
 
 pub fn switch() -> bool {
-    let config = Config::load();
-    let target = &config.general.user;
+    let target = username();
     run(&format!("nh home switch {REPO_PATH} -c {target}"))
 }
 

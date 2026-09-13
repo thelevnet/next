@@ -1,7 +1,7 @@
 use std::env;
 use std::path::Path;
 use std::process::Command;
-use crate::config::REPO_PATH;
+use crate::shell::REPO_PATH;
 
 const INLINE_DEV_SHELL: &str = r#"
 let

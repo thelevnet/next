@@ -1,5 +1,4 @@
 mod cli;
-mod config;
 mod shell;
 mod commands {
     pub mod os;

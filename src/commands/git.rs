@@ -1,14 +1,8 @@
-use crate::config::{Config, REPO_PATH};
+use crate::shell::REPO_PATH;
 use std::io::{self, BufRead, Write};
 use std::process::Command;
 
 pub fn sync() {
-    let config = Config::load();
-    if !config.git.enable {
-        eprintln!("Git integration is disabled in config");
-        return;
-    }
-
     let _ = Command::new("git").args(["-C", REPO_PATH, "add", "-A"]).status();
 
     print!("Commit message: ");
