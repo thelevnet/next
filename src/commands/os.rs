@@ -13,4 +13,3 @@ pub fn dry() -> bool {
 pub fn clean() -> bool {
     run(CLEAN_CMD)
 }
-

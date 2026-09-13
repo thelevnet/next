@@ -8,5 +8,3 @@ pub fn run(command: &str) -> bool {
         .map(|s| s.success())
         .unwrap_or(false)
 }
-
-

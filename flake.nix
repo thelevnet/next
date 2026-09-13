@@ -18,6 +18,8 @@
             nh
             git
             nix
+            fzf
+            wl-clipboard
           ] ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isLinux [
             pkgs.nixos-rebuild
           ];
@@ -71,7 +73,7 @@
         {
           default = pkgs.mkShell {
             inputsFrom = [ self.packages.${system}.default ];
-            packages = with pkgs; [ cargo rustc rust-analyzer ];
+            packages = with pkgs; [ cargo rustc rust-analyzer nh fzf wl-clipboard ];
           };
         }
       );

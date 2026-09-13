@@ -4,10 +4,12 @@ mod commands {
     pub mod os;
     pub mod home;
     pub mod sync;
+    pub mod search;
     pub mod dev;
 }
+
 use clap::Parser;
-use cli::{Cli, Commands, HomeAction, OsAction};
+use cli::{Cli, Commands, HomeAction, OsAction, SearchAction};
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
@@ -23,7 +25,14 @@ fn main() -> ExitCode {
             HomeAction::Switch => commands::home::switch(),
         },
         Commands::Sync { message } => commands::sync::sync(message),
+        Commands::Search { action } => match action {
+            SearchAction::Apps { query } => commands::search::apps(query),
+        },
         Commands::Dev => commands::dev::enter(),
+        Commands::SearchQuery { query } => {
+            commands::search::query(&query);
+            true
+        }
     };
 
     if success {

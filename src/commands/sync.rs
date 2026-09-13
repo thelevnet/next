@@ -33,6 +33,3 @@ pub fn sync(message: Option<String>) -> bool {
 
     run("git -C /etc/nixos pull --no-rebase --no-edit && git -C /etc/nixos push")
 }
-
-
-

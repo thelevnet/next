@@ -20,13 +20,21 @@ pub enum Commands {
         action: HomeAction,
     },
     /// sync configuration with git
-    #[command(alias = "git")]
     Sync {
         /// commit message
         message: Option<String>,
     },
+    /// search nixpkgs
+    Search {
+        #[command(subcommand)]
+        action: SearchAction,
+    },
     /// development shell
     Dev,
+    #[command(hide = true, name = "__search-query")]
+    SearchQuery {
+        query: Vec<String>,
+    },
 }
 
 #[derive(Subcommand)]
@@ -39,5 +47,14 @@ pub enum OsAction {
 #[derive(Subcommand)]
 pub enum HomeAction {
     Switch,
+}
+
+#[derive(Subcommand)]
+pub enum SearchAction {
+    /// search nixpkgs applications
+    Apps {
+        /// search query
+        query: Option<String>,
+    },
 }
 
